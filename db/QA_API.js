@@ -22,6 +22,13 @@ const markAnswerHelpful = (answer_id) => {
   });
 };
 
+const reportAnswer = (answer_id) => {
+  return Answer.update({reported: true}, {
+    where: {answer_id: answer_id}
+  });
+};
+
 module.exports.markQuestionHelpful = markQuestionHelpful;
 module.exports.reportQuestion = reportQuestion;
 module.exports.markAnswerHelpful = markAnswerHelpful;
+module.exports.reportAnswer = reportAnswer;
