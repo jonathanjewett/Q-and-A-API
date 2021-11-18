@@ -16,5 +16,12 @@ const reportQuestion = (question_id) => {
   });
 };
 
+const markAnswerHelpful = (answer_id) => {
+  return Answer.increment('answer_helpfulness', {
+    where: {answer_id: answer_id}
+  });
+};
+
 module.exports.markQuestionHelpful = markQuestionHelpful;
 module.exports.reportQuestion = reportQuestion;
+module.exports.markAnswerHelpful = markAnswerHelpful;

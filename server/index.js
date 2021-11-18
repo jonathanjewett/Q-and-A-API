@@ -34,6 +34,14 @@ app.put('/qa/questions/:question_id/report', (req, res) => {
   })
 });
 
+app.put('/qa/answers/:answer_id/helpful', (req, res) => {
+  let answer_id = parseInt(req.params.answer_id);
+  QA_API.markAnswerHelpful(answer_id).then(res.sendStatus(204)).catch((error) => {
+    console.log('error marking answer helpful');
+    res.sendStatus(500);
+  })
+});
+
 app.listen(port, () => {
   console.log('Server listening on ' + port)
 });
