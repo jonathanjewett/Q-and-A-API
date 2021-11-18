@@ -6,3 +6,5 @@ const Answer_Photo = require('./models/Answer_Photo.js');
 const markHelpful = (question_id) => {
   // do stuff
 };
+
+module.exports.markHelpful = markHelpful;
