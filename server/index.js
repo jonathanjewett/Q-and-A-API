@@ -26,6 +26,14 @@ app.put('/qa/questions/:question_id/helpful', (req, res) => {
   });
 });
 
+app.put('/qa/questions/:question_id/report', (req, res) => {
+  let question_id = parseInt(req.params.question_id);
+  QA_API.reportQuestion(question_id).then(res.sendStatus(204)).catch((error) => {
+    console.log('error reporting question');
+    res.sendStatus(500);
+  })
+});
+
 app.listen(port, () => {
   console.log('Server listening on ' + port)
 });

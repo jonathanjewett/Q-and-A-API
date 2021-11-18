@@ -10,4 +10,11 @@ const markQuestionHelpful = (question_id) => {
   });
 };
 
+const reportQuestion = (question_id) => {
+  return Question.update({reported: true}, {
+    where: {question_id: question_id}
+  });
+};
+
 module.exports.markQuestionHelpful = markQuestionHelpful;
+module.exports.reportQuestion = reportQuestion;
