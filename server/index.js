@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 // if after question mark its req.query
 app.put('/qa/questions/:question_id/helpful', (req, res) => {
   let question_id = parseInt(req.params.question_id);
-  QA_API.markHelpful(question_id).then(res.sendStatus(204)).catch((error) => {
+  QA_API.markQuestionHelpful(question_id).then(res.sendStatus(204)).catch((error) => {
     console.log('error marking helpful');
     res.sendStatus(500);
   });
