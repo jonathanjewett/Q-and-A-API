@@ -12,6 +12,16 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 });
 
+app.get('/qa/questions', (req, res) => {
+  let product_id = parseInt(req.query.product_id);
+  QA_API.listQuestions(product_id).then((results) => {
+    res.status(200).json(results);
+  }).catch((error) => {
+    console.log(error);
+    res.sendStatus(500);
+  });
+});
+
 // PUT request to mark a question as helpful
 // Should increment necessary field by 1
 // Parameter - question_id

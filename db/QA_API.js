@@ -3,6 +3,12 @@ const Question = require('./models/Question.js');
 const Answer = require('./models/Answer.js');
 const Answer_Photo = require('./models/Answer_Photo.js');
 
+const listQuestions = (product_id) => {
+  return Question.findAll({
+    where: {product_id: product_id}
+  });
+};
+
 const markQuestionHelpful = (question_id) => {
   // do stuff
   return Question.increment('question_helpfulness', {
@@ -28,6 +34,7 @@ const reportAnswer = (answer_id) => {
   });
 };
 
+module.exports.listQuestions = listQuestions;
 module.exports.markQuestionHelpful = markQuestionHelpful;
 module.exports.reportQuestion = reportQuestion;
 module.exports.markAnswerHelpful = markAnswerHelpful;
