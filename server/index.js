@@ -31,7 +31,7 @@ app.get('/qa/questions', (req, res) => {
 app.put('/qa/questions/:question_id/helpful', (req, res) => {
   let question_id = parseInt(req.params.question_id);
   QA_API.markQuestionHelpful(question_id).then(res.sendStatus(204)).catch((error) => {
-    console.log('error marking helpful');
+    console.log(error);
     res.sendStatus(500);
   });
 });
@@ -39,7 +39,7 @@ app.put('/qa/questions/:question_id/helpful', (req, res) => {
 app.put('/qa/questions/:question_id/report', (req, res) => {
   let question_id = parseInt(req.params.question_id);
   QA_API.reportQuestion(question_id).then(res.sendStatus(204)).catch((error) => {
-    console.log('error reporting question');
+    console.log(error);
     res.sendStatus(500);
   })
 });
@@ -47,7 +47,7 @@ app.put('/qa/questions/:question_id/report', (req, res) => {
 app.put('/qa/answers/:answer_id/helpful', (req, res) => {
   let answer_id = parseInt(req.params.answer_id);
   QA_API.markAnswerHelpful(answer_id).then(res.sendStatus(204)).catch((error) => {
-    console.log('error marking answer helpful');
+    console.log(error);
     res.sendStatus(500);
   })
 });
@@ -55,7 +55,7 @@ app.put('/qa/answers/:answer_id/helpful', (req, res) => {
 app.put('/qa/answers/:answer_id/report', (req, res) => {
   let answer_id = parseInt(req.params.answer_id);
   QA_API.reportAnswer(answer_id).then(res.sendStatus(204)).catch((error) => {
-    console.log('error reporting answer');
+    console.log(error);
     res.sendStatus(500);
   });
 });
