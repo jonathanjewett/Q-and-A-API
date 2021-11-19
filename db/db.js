@@ -3,7 +3,7 @@ const { user, database, password } = require('./config.js');
 
 const seq = new Sequelize(database, user, password, {
   dialect: 'postgres',
-  host: '/tmp',
+  host: '/var/run/postgresql',
   define: {
     timestamps: false
   }
