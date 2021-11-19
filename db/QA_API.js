@@ -5,7 +5,17 @@ const Answer_Photo = require('./models/Answer_Photo.js');
 
 const listQuestions = (product_id) => {
   return Question.findAll({
+    attributes: [
+      'question_id',
+      'question_body',
+      'question_date',
+      'asker_name',
+      'question_helpfulness',
+      'reported'
+    ],
     where: {product_id: product_id}
+  }).then((results) => {
+    console.log(results);
   });
 };
 
