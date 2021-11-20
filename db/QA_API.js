@@ -27,7 +27,7 @@ const listQuestions = (product_id) => {
     //     asker_name: 'jbilas',
     //     question_helpfulness: 4,
     //     reported: true
-    //   }
+    //   
     var answerQueries = [];
     for (var i = 0; i < questions.length; i++) {
       answerQueries.push(Answer.findAll({
@@ -52,15 +52,40 @@ const listQuestions = (product_id) => {
         }
         questions[p].dataValues.answers = tempObj;
       }
-      let productObj = {product_id: product_id.toString(), results: questions};
-      return productObj;
+      return questions;
+      // let productObj = {product_id: product_id.toString(), results: questions};
+      // return productObj;
+    }).then((questions) => {
+      var photoQueries = [];
+      for (var i = 0; i < questions.length; i++) {
+        for (var answer in questions[i].dataValues.answers) {
+          photoQueries.push(Answer_Photo.findAll({
+            attributes: [
+              'photo_url'
+            ],
+            where: {answer_id: answer}
+          }));
+        }
+      }
+      return Promise.all(photoQueries).then((photos) => {
+        for (var i = 0; i < questions.length; i++) {
+          for (var answer in questions[i].dataValues.answers) {
+            var tempPhotos = [];
+            for (const photo in photos[i]) {
+              tempPhotos.push(photos[i][photo].photo_url);
+            }
+            questions[i].dataValues.answers[answer].dataValues.photos = tempPhotos;
+          }
+        }
+        let productObj = {product_id: product_id.toString(), results: questions};
+        return productObj;
+      });
     });
    
-  });
+  })
 };
 
 const markQuestionHelpful = (question_id) => {
-  // do stuff
   return Question.increment('question_helpfulness', {
     where: {question_id: question_id}
   });
