@@ -46,7 +46,8 @@ const listQuestions = (product_id) => {
       for (var p = 0; p < questions.length; p++) {
         questions[p].dataValues.answers = answers[p];
       }
-      return questions;
+      let productObj = {product_id: product_id.toString(), results: questions};
+      return productObj;
     });
    
   });
