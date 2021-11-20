@@ -42,12 +42,13 @@ const listQuestions = (product_id) => {
       }));
     }
     // what if a question doesnt have any answers?
-    Promise.all(answerQueries).then((answers) => {
+    return Promise.all(answerQueries).then((answers) => {
       for (var p = 0; p < questions.length; p++) {
-        questions[p]['answers'] = answers[p];
+        questions[p].dataValues.answers = answers[p];
       }
+      return questions;
     });
-    return questions;
+   
   });
 };
 
