@@ -44,7 +44,13 @@ const listQuestions = (product_id) => {
     // what if a question doesnt have any answers?
     return Promise.all(answerQueries).then((answers) => {
       for (var p = 0; p < questions.length; p++) {
-        questions[p].dataValues.answers = answers[p];
+        // questions[p].dataValues.answers = answers[p];
+        var tempArray = answers[p];
+        var tempObj = {};
+        for (var a = 0; a < tempArray.length; a++) {
+          tempObj[tempArray[a].answer_id] = tempArray[a];
+        }
+        questions[p].dataValues.answers = tempObj;
       }
       let productObj = {product_id: product_id.toString(), results: questions};
       return productObj;
