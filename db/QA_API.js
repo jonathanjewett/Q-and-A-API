@@ -4,8 +4,6 @@ const Answer = require('./models/Answer.js');
 const Answer_Photo = require('./models/Answer_Photo.js');
 
 const listQuestions = (product_id) => {
-  let questionsArray = [];
-  let answerArray = [];
   return Question.findAll({
     attributes: [
       'question_id',
@@ -33,28 +31,24 @@ const listQuestions = (product_id) => {
       answerQueries.push(Answer.findAll({
         attributes: [
           'answer_id',
-          'answer_body',
-          'answer_date',
+          ['answer_body', 'body'],
+          ['answer_date', 'date'],
           'answerer_name',
-          'answer_helpfulness'
+          ['answer_helpfulness', 'helpfulness']
         ],
         where: {question_id: questions[i].dataValues.question_id}
       }));
     }
-    // what if a question doesnt have any answers?
     return Promise.all(answerQueries).then((answers) => {
       for (var p = 0; p < questions.length; p++) {
-        // questions[p].dataValues.answers = answers[p];
         var tempArray = answers[p];
         var tempObj = {};
         for (var a = 0; a < tempArray.length; a++) {
-          tempObj[tempArray[a].answer_id] = tempArray[a];
+          tempObj[tempArray[a].id] = tempArray[a];
         }
         questions[p].dataValues.answers = tempObj;
       }
       return questions;
-      // let productObj = {product_id: product_id.toString(), results: questions};
-      // return productObj;
     }).then((questions) => {
       var photoQueries = [];
       for (var i = 0; i < questions.length; i++) {
