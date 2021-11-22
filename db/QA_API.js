@@ -30,7 +30,7 @@ const listQuestions = (product_id) => {
     for (var i = 0; i < questions.length; i++) {
       answerQueries.push(Answer.findAll({
         attributes: [
-          'answer_id',
+          ['answer_id', 'id'],
           ['answer_body', 'body'],
           ['answer_date', 'date'],
           'answerer_name',
@@ -44,7 +44,7 @@ const listQuestions = (product_id) => {
         var tempArray = answers[p];
         var tempObj = {};
         for (var a = 0; a < tempArray.length; a++) {
-          tempObj[tempArray[a].id] = tempArray[a];
+          tempObj[tempArray[a].dataValues.id] = tempArray[a];
         }
         questions[p].dataValues.answers = tempObj;
       }
