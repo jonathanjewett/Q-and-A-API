@@ -13,7 +13,7 @@ const listQuestions = (product_id) => {
       'question_helpfulness',
       'reported'
     ],
-    where: {product_id: product_id}
+    where: { product_id: product_id }
   }).then((questions) => {
     //console.log(results);
     // results is an array of Question objects
@@ -36,7 +36,7 @@ const listQuestions = (product_id) => {
           'answerer_name',
           ['answer_helpfulness', 'helpfulness']
         ],
-        where: {question_id: questions[i].dataValues.question_id}
+        where: { question_id: questions[i].dataValues.question_id }
       }));
     }
     return Promise.all(answerQueries).then((answers) => {
@@ -57,7 +57,7 @@ const listQuestions = (product_id) => {
             attributes: [
               'photo_url'
             ],
-            where: {answer_id: answer}
+            where: { answer_id: answer }
           }));
         }
       }
@@ -71,39 +71,71 @@ const listQuestions = (product_id) => {
             questions[i].dataValues.answers[answer].dataValues.photos = tempPhotos;
           }
         }
-        let productObj = {product_id: product_id.toString(), results: questions};
+        let productObj = { product_id: product_id.toString(), results: questions };
         return productObj;
       });
     });
-   
+
   })
+};
+
+const listAnswers = (question_id) => {
+  return Answer.findAll({
+    attributes: [
+      'answer_id',
+      ['answer_body', 'body'],
+      ['answer_date', 'date'],
+      'answerer_name',
+      ['answer_helpfulness', 'helpfulness']
+    ],
+    where: { question_id: question_id}
+  }).then((answers) => {
+    photoQueries = [];
+    for (var i = 0; i < answers.length; i++) {
+      photoQueries.push(Answer_Photo.findAll({
+        attributes: [
+          ['photo_id', 'id'],
+          ['photo_url', 'url']
+        ],
+        where: { answer_id: answers[i].dataValues.answer_id}
+      }));
+    }
+    return Promise.all(photoQueries).then((photos) => {
+      for (var i = 0; i < answers.length; i++) {
+        answers[i].dataValues.photos = photos[i];
+      }
+      tempObj = {question: question_id.toString(), results: answers}
+      return tempObj;
+    });
+  });
 };
 
 const markQuestionHelpful = (question_id) => {
   return Question.increment('question_helpfulness', {
-    where: {question_id: question_id}
+    where: { question_id: question_id }
   });
 };
 
 const reportQuestion = (question_id) => {
-  return Question.update({reported: true}, {
-    where: {question_id: question_id}
+  return Question.update({ reported: true }, {
+    where: { question_id: question_id }
   });
 };
 
 const markAnswerHelpful = (answer_id) => {
   return Answer.increment('answer_helpfulness', {
-    where: {answer_id: answer_id}
+    where: { answer_id: answer_id }
   });
 };
 
 const reportAnswer = (answer_id) => {
-  return Answer.update({reported: true}, {
-    where: {answer_id: answer_id}
+  return Answer.update({ reported: true }, {
+    where: { answer_id: answer_id }
   });
 };
 
 module.exports.listQuestions = listQuestions;
+module.exports.listAnswers = listAnswers;
 module.exports.markQuestionHelpful = markQuestionHelpful;
 module.exports.reportQuestion = reportQuestion;
 module.exports.markAnswerHelpful = markAnswerHelpful;
