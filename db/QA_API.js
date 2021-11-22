@@ -3,7 +3,9 @@ const Question = require('./models/Question.js');
 const Answer = require('./models/Answer.js');
 const Answer_Photo = require('./models/Answer_Photo.js');
 
-const listQuestions = (product_id) => {
+const listQuestions = (product_id, page, count) => {
+  // off will be used for the offset, which lets postgres know how many questions to ignore from the beginning
+  let off = page * count - count;
   return Question.findAll({
     attributes: [
       'question_id',
@@ -13,7 +15,9 @@ const listQuestions = (product_id) => {
       'question_helpfulness',
       'reported'
     ],
-    where: { product_id: product_id }
+    where: { product_id: product_id },
+    offset: off,
+    limit : count
   }).then((questions) => {
     //console.log(results);
     // results is an array of Question objects
@@ -79,7 +83,8 @@ const listQuestions = (product_id) => {
   })
 };
 
-const listAnswers = (question_id) => {
+const listAnswers = (question_id, page, count) => {
+  let off = page * count - count;
   return Answer.findAll({
     attributes: [
       'answer_id',
@@ -88,7 +93,9 @@ const listAnswers = (question_id) => {
       'answerer_name',
       ['answer_helpfulness', 'helpfulness']
     ],
-    where: { question_id: question_id}
+    where: { question_id: question_id},
+    offset: off,
+    limit : count
   }).then((answers) => {
     photoQueries = [];
     for (var i = 0; i < answers.length; i++) {

@@ -14,7 +14,9 @@ app.get('/', (req, res) => {
 
 app.get('/qa/questions', (req, res) => {
   let product_id = parseInt(req.query.product_id);
-  QA_API.listQuestions(product_id).then((results) => {
+  let page = req.query.page ? parseInt(req.query.page) : 1;
+  let count = req.query.count ? parseInt(req.query.count) : 5;
+  QA_API.listQuestions(product_id, page, count).then((results) => {
     res.status(200).json(results);
   }).catch((error) => {
     console.log(error);
@@ -24,7 +26,9 @@ app.get('/qa/questions', (req, res) => {
 
 app.get('/qa/questions/:question_id/answers', (req, res) => {
   let question_id = parseInt(req.params.question_id);
-  QA_API.listAnswers(question_id).then((results) => {
+  let page = req.query.page ? parseInt(req.query.page) : 1;
+  let count = req.query.count ? parseInt(req.query.count) : 5;
+  QA_API.listAnswers(question_id, page, count).then((results) => {
     res.status(200).json(results);
   }).catch((error) => {
     console.log(error);
