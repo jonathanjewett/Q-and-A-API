@@ -8,13 +8,18 @@ const QA_API = require('../db/QA_API.js');
 const app = express();
 const port = 3000;
 
+app.use(express.json());
+
 app.get('/', (req, res) => {
   res.send('Hello World!')
 });
 
+//Get Questions
 app.get('/qa/questions', (req, res) => {
   let product_id = parseInt(req.query.product_id);
-  QA_API.listQuestions(product_id).then((results) => {
+  let page = req.query.page ? parseInt(req.query.page) : 1;
+  let count = req.query.count ? parseInt(req.query.count) : 5;
+  QA_API.listQuestions(product_id, page, count).then((results) => {
     res.status(200).json(results);
   }).catch((error) => {
     console.log(error);
@@ -22,15 +27,39 @@ app.get('/qa/questions', (req, res) => {
   });
 });
 
+//Get Answers
 app.get('/qa/questions/:question_id/answers', (req, res) => {
   let question_id = parseInt(req.params.question_id);
-  QA_API.listAnswers(question_id).then((results) => {
+  let page = parseInt(req.query.page) || 1;
+  let count = parseInt(req.query.count) || 5;
+  QA_API.listAnswers(question_id, page, count).then((results) => {
     res.status(200).json(results);
   }).catch((error) => {
     console.log(error);
     res.sendStatus(500);
   })
-})
+});
+
+//Add Question
+app.post('/qa/questions', (req, res) => {
+  QA_API.addQuestion(req.body).then((results) => {
+    res.sendStatus(201);
+  }).catch((error) => {
+    console.log(error);
+    res.sendStatus(500);
+  })
+});
+
+//Add Answer
+app.post('/qa/questions/:question_id/answers', (req, res) => {
+  let question_id = parseInt(req.params.question_id);
+  QA_API.addAnswer(question_id, req.body).then((results) => {
+    res.status(201).json(results);
+  }).catch((error) => {
+    console.log(error);
+    res.sendStatus(500);
+  })
+});
 
 // PUT request to mark a question as helpful
 // Should increment necessary field by 1

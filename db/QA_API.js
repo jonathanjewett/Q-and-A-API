@@ -3,7 +3,9 @@ const Question = require('./models/Question.js');
 const Answer = require('./models/Answer.js');
 const Answer_Photo = require('./models/Answer_Photo.js');
 
-const listQuestions = (product_id) => {
+const listQuestions = (product_id, page, count) => {
+  // off will be used for the offset, which lets postgres know how many questions to ignore from the beginning
+  let off = page * count - count;
   return Question.findAll({
     attributes: [
       'question_id',
@@ -13,7 +15,9 @@ const listQuestions = (product_id) => {
       'question_helpfulness',
       'reported'
     ],
-    where: { product_id: product_id }
+    where: { product_id: product_id },
+    offset: off,
+    limit : count
   }).then((questions) => {
     //console.log(results);
     // results is an array of Question objects
@@ -79,7 +83,8 @@ const listQuestions = (product_id) => {
   })
 };
 
-const listAnswers = (question_id) => {
+const listAnswers = (question_id, page, count) => {
+  let off = page * count - count;
   return Answer.findAll({
     attributes: [
       'answer_id',
@@ -88,7 +93,9 @@ const listAnswers = (question_id) => {
       'answerer_name',
       ['answer_helpfulness', 'helpfulness']
     ],
-    where: { question_id: question_id}
+    where: { question_id: question_id},
+    offset: off,
+    limit : count
   }).then((answers) => {
     photoQueries = [];
     for (var i = 0; i < answers.length; i++) {
@@ -107,6 +114,42 @@ const listAnswers = (question_id) => {
       tempObj = {question: question_id.toString(), results: answers}
       return tempObj;
     });
+  });
+};
+
+const addQuestion = (req_body) => {
+  let question = {};
+  // question.question_id = null;
+  question.product_id = req_body.product_id;
+  question.question_body = req_body.body;
+  question.question_date = Date.now();
+  question.asker_name = req_body.name;
+  question.asker_email = req_body.email;
+  // question.reported = false;
+  // question.question_helpfulness = 0;
+
+  return Question.create(question);
+};
+
+const addAnswer = (question_id, req_body) => {
+  let answer = {};
+  answer.question_id = question_id;
+  answer.answer_body = req_body.body;
+  answer.answer_date = Date.now();
+  answer.answerer_name = req_body.name;
+  answer.answerer_email = req_body.email;
+  
+  return Answer.create(answer).then((answer) => {
+    let answer_id = answer.dataValues.answer_id;
+    let photos = req_body.photos;
+    let photoPromise = [];
+    for (var i = 0; i < photos.length; i++) {
+      let tempPhoto = {};
+      tempPhoto.answer_id = answer_id;
+      tempPhoto.photo_url = photos[i];
+      photoPromise.push(Answer_Photo.create(tempPhoto));
+    }
+    return Promise.all(photoPromise);
   });
 };
 
@@ -136,6 +179,8 @@ const reportAnswer = (answer_id) => {
 
 module.exports.listQuestions = listQuestions;
 module.exports.listAnswers = listAnswers;
+module.exports.addQuestion = addQuestion;
+module.exports.addAnswer = addAnswer;
 module.exports.markQuestionHelpful = markQuestionHelpful;
 module.exports.reportQuestion = reportQuestion;
 module.exports.markAnswerHelpful = markAnswerHelpful;
