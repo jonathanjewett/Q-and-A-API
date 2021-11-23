@@ -117,6 +117,20 @@ const listAnswers = (question_id, page, count) => {
   });
 };
 
+const addQuestion = (req_body) => {
+  let question = {};
+  // question.question_id = null;
+  question.product_id = req_body.product_id;
+  question.question_body = req_body.body;
+  question.question_date = Date.now();
+  question.asker_name = req_body.name;
+  question.asker_email = req_body.email;
+  // question.reported = false;
+  // question.question_helpfulness = 0;
+
+  return Question.create(question);
+};
+
 const markQuestionHelpful = (question_id) => {
   return Question.increment('question_helpfulness', {
     where: { question_id: question_id }
@@ -143,6 +157,7 @@ const reportAnswer = (answer_id) => {
 
 module.exports.listQuestions = listQuestions;
 module.exports.listAnswers = listAnswers;
+module.exports.addQuestion = addQuestion;
 module.exports.markQuestionHelpful = markQuestionHelpful;
 module.exports.reportQuestion = reportQuestion;
 module.exports.markAnswerHelpful = markAnswerHelpful;

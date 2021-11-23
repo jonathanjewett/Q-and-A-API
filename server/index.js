@@ -8,6 +8,8 @@ const QA_API = require('../db/QA_API.js');
 const app = express();
 const port = 3000;
 
+app.use(express.json());
+
 app.get('/', (req, res) => {
   res.send('Hello World!')
 });
@@ -34,7 +36,16 @@ app.get('/qa/questions/:question_id/answers', (req, res) => {
     console.log(error);
     res.sendStatus(500);
   })
-})
+});
+
+app.post('/qa/questions', (req, res) => {
+  QA_API.addQuestion(req.body).then((results) => {
+    res.status(201).json(results);
+  }).catch((error) => {
+    console.log(error);
+    res.sendStatus(500);
+  })
+});
 
 // PUT request to mark a question as helpful
 // Should increment necessary field by 1
