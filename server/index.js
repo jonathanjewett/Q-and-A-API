@@ -14,6 +14,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 });
 
+//Get Questions
 app.get('/qa/questions', (req, res) => {
   let product_id = parseInt(req.query.product_id);
   let page = req.query.page ? parseInt(req.query.page) : 1;
@@ -26,6 +27,7 @@ app.get('/qa/questions', (req, res) => {
   });
 });
 
+//Get Answers
 app.get('/qa/questions/:question_id/answers', (req, res) => {
   let question_id = parseInt(req.params.question_id);
   let page = req.query.page ? parseInt(req.query.page) : 1;
@@ -38,9 +40,20 @@ app.get('/qa/questions/:question_id/answers', (req, res) => {
   })
 });
 
+//Add Question
 app.post('/qa/questions', (req, res) => {
   QA_API.addQuestion(req.body).then((results) => {
-    res.status(201).json(results);
+    res.sendStatus(201);
+  }).catch((error) => {
+    console.log(error);
+    res.sendStatus(500);
+  })
+});
+
+//Add Answer
+app.post('qa/questions/:question_id/answers', (req, res) => {
+  QA_API.addAnswer(req.body).then((results) => {
+    res.status(201);
   }).catch((error) => {
     console.log(error);
     res.sendStatus(500);
