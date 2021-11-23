@@ -30,8 +30,8 @@ app.get('/qa/questions', (req, res) => {
 //Get Answers
 app.get('/qa/questions/:question_id/answers', (req, res) => {
   let question_id = parseInt(req.params.question_id);
-  let page = req.query.page ? parseInt(req.query.page) : 1;
-  let count = req.query.count ? parseInt(req.query.count) : 5;
+  let page = parseInt(req.query.page) || 1;
+  let count = parseInt(req.query.count) || 5;
   QA_API.listAnswers(question_id, page, count).then((results) => {
     res.status(200).json(results);
   }).catch((error) => {
