@@ -131,6 +131,28 @@ const addQuestion = (req_body) => {
   return Question.create(question);
 };
 
+const addAnswer = (question_id, req_body) => {
+  let answer = {};
+  answer.question_id = question_id;
+  answer.answer_body = req_body.body;
+  answer.answer_date = Date.now();
+  answer.answerer_name = req_body.name;
+  answer.answerer_email = req_body.email;
+  
+  return Answer.create(answer).then((answer) => {
+    let answer_id = answer.dataValues.answer_id;
+    let photos = req_body.photos;
+    let photoPromise = [];
+    for (var i = 0; i < photos.length; i++) {
+      let tempPhoto = {};
+      tempPhoto.answer_id = answer_id;
+      tempPhoto.photo_url = photos[i];
+      photoPromise.push(Answer_Photo.create(tempPhoto));
+    }
+    return Promise.all(photoPromise);
+  });
+};
+
 const markQuestionHelpful = (question_id) => {
   return Question.increment('question_helpfulness', {
     where: { question_id: question_id }
@@ -158,6 +180,7 @@ const reportAnswer = (answer_id) => {
 module.exports.listQuestions = listQuestions;
 module.exports.listAnswers = listAnswers;
 module.exports.addQuestion = addQuestion;
+module.exports.addAnswer = addAnswer;
 module.exports.markQuestionHelpful = markQuestionHelpful;
 module.exports.reportQuestion = reportQuestion;
 module.exports.markAnswerHelpful = markAnswerHelpful;

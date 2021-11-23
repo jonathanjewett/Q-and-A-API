@@ -51,9 +51,10 @@ app.post('/qa/questions', (req, res) => {
 });
 
 //Add Answer
-app.post('qa/questions/:question_id/answers', (req, res) => {
-  QA_API.addAnswer(req.body).then((results) => {
-    res.status(201);
+app.post('/qa/questions/:question_id/answers', (req, res) => {
+  let question_id = parseInt(req.params.question_id);
+  QA_API.addAnswer(question_id, req.body).then((results) => {
+    res.status(201).json(results);
   }).catch((error) => {
     console.log(error);
     res.sendStatus(500);
