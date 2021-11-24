@@ -10,6 +10,7 @@ const seq = new Sequelize(database, user, password, {
   logging: false
 });
 
+// seq.authenticate().then(() => seq.sync({ alter: true })).catch((error) => console.log(error));
 seq.authenticate().then(() => seq.sync()).catch((error) => console.log(error));
 
 module.exports = seq;
