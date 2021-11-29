@@ -21,6 +21,11 @@ Answer_Photo.init({
     allowNull: false
   }
 }, {
+  indexes: [
+    {
+      fields: ['answer_id']
+    }
+  ],
   sequelize: seq
 });
 

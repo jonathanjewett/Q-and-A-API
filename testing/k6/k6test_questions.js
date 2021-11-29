@@ -5,16 +5,16 @@ export const options = {
     scenarios: {
         contacts: {
             executor: 'constant-arrival-rate',
-            rate: 100,
+            rate: 950,
             duration: '30s',
-            preAllocatedVUs: 100,
+            preAllocatedVUs: 950,
             maxVUs: 10000
         }
     }
 }
 
 export default function () {
-    let randi = Math.floor(Math.random() * 1000000 + 900000);
+    let randi = Math.floor(Math.random() * 100000 + 900000);
     const url = `http://localhost:3000/qa/questions?product_id=${randi}`;
     const res = http.get(url);
 }
