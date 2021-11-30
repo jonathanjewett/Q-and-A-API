@@ -15,7 +15,10 @@ const listQuestions = (product_id, page, count) => {
       'question_helpfulness',
       'reported'
     ],
-    where: { product_id: product_id },
+    where: { 
+      product_id: product_id ,
+      reported: false
+    },
     offset: off,
     limit : count
   }).then((questions) => {
@@ -93,7 +96,10 @@ const listAnswers = (question_id, page, count) => {
       'answerer_name',
       ['answer_helpfulness', 'helpfulness']
     ],
-    where: { question_id: question_id},
+    where: { 
+      question_id: question_id,
+      reported: false
+    },
     offset: off,
     limit : count
   }).then((answers) => {

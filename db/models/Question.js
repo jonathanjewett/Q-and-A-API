@@ -1,7 +1,7 @@
 const { Sequelize, Model, DataTypes } = require('sequelize');
 const seq = require('../db.js');
 
-class Question extends Model {}
+class Question extends Model { }
 
 Question.init({
   question_id: {
@@ -52,6 +52,14 @@ Question.init({
 
 
 }, {
+  indexes: [
+    {
+      fields: ['product_id']
+    },
+    {
+      fields: ['reported']
+    }
+  ],
   sequelize: seq
 });
 

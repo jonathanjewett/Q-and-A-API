@@ -51,6 +51,14 @@ Answer.init({
   }
 
 }, {
+  indexes: [
+    {
+      fields: ['question_id']
+    },
+    {
+      fields: ['reported']
+    }
+  ],
   sequelize: seq
 });
 
